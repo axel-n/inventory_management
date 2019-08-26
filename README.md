@@ -9,7 +9,7 @@
 2. run docker container `docker run inventory_management:1.0-SNAPSHOT`
 
 ## TODO
-##$ Write a simple inventory management system. User should be able to:
+### Write a simple inventory management system. User should be able to:
 - Enter new product (product details are listed below)
 - Find product by name/brand
 - Update/remove product
