@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -58,10 +59,51 @@ public class ProductController {
         return Mono.empty();
     }
 
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(value = "/product", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<Long> addProduct(@RequestBody Product product,
+                                 @RequestHeader HttpHeaders headers) {
+
+        log.info("addProduct test");
+
+        if (product.getCount() == null) {
+            product.setCount(1L);
+        }
+
+        Claims claims = jwtUtil.getAllClaimsFromHeaders(headers);
+        log.info("user with claims {} want create product {}", claims, product);
+
+        product = productDao.save(product);
+        if (product.getId() != null) {
+            return Mono.just(product.getId());
+        } else {
+            log.error("not create product");
+            return Mono.empty();
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @DeleteMapping(value = "/product/{productId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<Boolean> addProduct(@PathVariable("productId") Long productId,
+                                    @RequestHeader HttpHeaders headers) {
+
+        Claims claims = jwtUtil.getAllClaimsFromHeaders(headers);
+        log.info("user with claims {} want delete productId {}", claims, productId);
+
+        productDao.deleteById(productId);
+
+        if (productDao.findById(productId).isEmpty()) {
+            return Mono.just(true);
+        } else {
+            return Mono.just(false);
+        }
+    }
+
     // for test
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Mono<List<Product>> getAllProducts() {
-
         return Mono.just(productDao.findAll());
     }
 }
