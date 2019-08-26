@@ -23,10 +23,7 @@ public interface ProductDao extends JpaRepository<Product, Long> {
 
     Optional<Product> findById(Long id);
 
-//    @Modifying
-//    @Transactional
-//    @Query("UPDATE Product c SET c.status = :status, c.assigner = :assigner, c.udat = CURRENT_TIMESTAMP WHERE c.id = :contractId")
-//    int updateStatus(@Param("contractId") int contractId, @Param("assigner") User assigner, @Param("status") TaskStatus status);
+    Page<Product> findByCountLessThanEqual(Long count, Pageable pageable);
 
     @Modifying
     @Transactional

@@ -1,12 +1,12 @@
 package com.example.inventory_management.controllers;
 
 import com.example.inventory_management.dao.ProductDao;
-import com.example.inventory_management.dao.UserDao;
 import com.example.inventory_management.models.product.Product;
 import com.example.inventory_management.models.product.dict.BrandType;
 import com.example.inventory_management.spring.auth.JWTUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +24,15 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class ProductController {
 
+    @Value("${countLeftovers}")
+    private Long countLeftovers;
+
     private final ProductDao productDao;
-    private final UserDao userDao;
     private final JWTUtil jwtUtil;
 
-    public ProductController(JWTUtil jwtUtil, ProductDao contractDao, UserDao userDao) {
+    public ProductController(JWTUtil jwtUtil, ProductDao contractDao) {
         this.jwtUtil = jwtUtil;
         this.productDao = contractDao;
-        this.userDao = userDao;
     }
 
 
@@ -131,6 +132,18 @@ public class ProductController {
         return Mono.just(false);
     }
 
+    @GetMapping(value = "/products/leftovers", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<Page<Product>> getLeftovers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                            @RequestParam(value = "size", defaultValue = "10") int size,
+                                            @RequestHeader HttpHeaders headers) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Claims claims = jwtUtil.getAllClaimsFromHeaders(headers);
+
+
+        log.info("user with claims {} want get leftovers products", claims);
+        return Mono.just(productDao.findByCountLessThanEqual(countLeftovers, pageable));
+    }
 
     // for test
     @PreAuthorize("hasAnyAuthority('ADMIN')")
