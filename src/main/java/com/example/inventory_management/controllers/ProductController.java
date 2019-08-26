@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -33,37 +32,36 @@ public class ProductController {
         this.userDao = userDao;
     }
 
-    // for test
-    @PostMapping(value = "/products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Mono<Page<Product>> searchByParam(@RequestBody Map<String, Object> params,
+
+    @GetMapping(value = "/products/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<Page<Product>> searchByParam(@RequestParam(value = "name", required = false) String name,
+                                             @RequestParam(value = "brand", required = false) BrandType brand,
                                              @RequestParam(value = "page", defaultValue = "0") int page,
                                              @RequestParam(value = "size", defaultValue = "10") int size,
                                              @RequestHeader HttpHeaders headers) {
 
-        Object name = params.get("name");
-        Object brand = params.get("brand");
         Pageable pageable = PageRequest.of(page, size);
         Claims claims = jwtUtil.getAllClaimsFromHeaders(headers);
 
         if (name != null) {
             log.info("user with claims {} want get products by name {}", claims, name);
-            return Mono.just(productDao.findByName(name.toString(), pageable));
+            return Mono.just(productDao.findByNameEquals(name, pageable));
         }
 
         if (brand != null) {
-            BrandType brandType = BrandType.valueOf(brand.toString());
-            log.info("user with claims {} want get products by brand {}", claims, brandType);
-            return Mono.just(productDao.findByBrand(brandType, pageable));
+            log.info("user with claims {} want get products by brand {}", claims, brand);
+            return Mono.just(productDao.findByBrand(brand, pageable));
         }
+
 
         log.warn("not found any param");
         return Mono.empty();
     }
 
-        // for test
-        @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-        public Mono<List<Product>> getAllProducts () {
+    // for test
+    @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<List<Product>> getAllProducts() {
 
-            return Mono.just(productDao.findAll());
-        }
+        return Mono.just(productDao.findAll());
     }
+}

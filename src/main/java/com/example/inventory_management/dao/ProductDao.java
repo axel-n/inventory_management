@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Long> {
 
-    Page<Product> findByName(String name, Pageable pageable);
+    Page<Product> findByNameEquals(String name, Pageable pageable);
     Page<Product> findByBrand(BrandType brand, Pageable pageable);
     List<Product> findAll();
 
