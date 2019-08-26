@@ -44,17 +44,18 @@ public class LocalAdminAuthenticationProvider implements ReactiveAuthenticationM
         String authToken = req.getCredentials().toString();
 
         String username = null;
+        Claims claims = null;
         try {
             username = jwtUtil.getUsernameFromToken(authToken);
-            Claims claims = jwtUtil.getAllClaimsFromToken(authToken);
+           claims = jwtUtil.getAllClaimsFromToken(authToken);
 
             log.info("claims for user {}", claims);
         } catch (Exception e) {
             log.error("error: {}", e.getMessage());
         }
 
-        if (username != null && jwtUtil.validateToken(authToken)) {
-            UsernamePasswordAuthenticationToken springUserDetails = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        if (username != null && jwtUtil.validateToken(authToken) && claims != null) {
+            UsernamePasswordAuthenticationToken springUserDetails = new UsernamePasswordAuthenticationToken(username, null,  Collections.singletonList(new SimpleGrantedAuthority(claims.get("role").toString())));
             return Mono.just(springUserDetails);
         } else {
             log.error("user {} send invalid token {}", username, authToken);

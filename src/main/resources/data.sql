@@ -3,8 +3,8 @@
 ---------------------------------------
 -- pass for all: 123
 insert into user (id, name, role, email, password, enabled)
-values (1, 'guest1', 0, 'user1@gmail.com', '$2a$10$LPWXDhi23gwFk.4tvfv8quqBCTBSAJt9SBXZLRCjz8yJ9.O8gAXOW', true),
-       (2, 'admin', 1, 'user2@gmail.com', '$2a$10$LPWXDhi23gwFk.4tvfv8quqBCTBSAJt9SBXZLRCjz8yJ9.O8gAXOW', true);
+values (1, 'guest1', 0, 'guest1@gmail.com', '$2a$10$LPWXDhi23gwFk.4tvfv8quqBCTBSAJt9SBXZLRCjz8yJ9.O8gAXOW', true),
+       (2, 'admin', 1, 'admin@gmail.com', '$2a$10$LPWXDhi23gwFk.4tvfv8quqBCTBSAJt9SBXZLRCjz8yJ9.O8gAXOW', true);
 
 ---------------------------------------
 -- Product
