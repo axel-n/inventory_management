@@ -2,6 +2,7 @@
 
 ## Links
 [postman collerction](https://www.getpostman.com/collections/c53a6ea89b5ff710d90c)
+[online_documentation](https://documenter.getpostman.com/view/6588996/SVfNv9At?version=latest)
 
 ## Write a simple inventory management system. User should be able to:
 - Enter new product (product details are listed below)
