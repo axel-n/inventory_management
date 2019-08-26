@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -99,6 +100,37 @@ public class ProductController {
             return Mono.just(false);
         }
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PutMapping(value = "/product", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Mono<Boolean> updateProduct(@RequestBody Product product,
+                                       @RequestHeader HttpHeaders headers) {
+
+        Claims claims = jwtUtil.getAllClaimsFromHeaders(headers);
+        log.info("user with claims {} want update product {}", claims, product);
+
+        if (product.getId() != null) {
+
+            Optional<Product> productFound = productDao.findById(product.getId());
+            if (productFound.isPresent()) {
+                try {
+                    Product productMerged = Product.merge(product, productFound.get());
+                    log.info("merged product {} from bd", product);
+                    productDao.save(productMerged);
+                    return Mono.just(true);
+                } catch (Exception e) {
+                    log.error("e {}", e.getMessage());
+                }
+            }
+
+        } else {
+            log.error("product id not received");
+            return Mono.just(false);
+        }
+
+        return Mono.just(false);
+    }
+
 
     // for test
     @PreAuthorize("hasAnyAuthority('ADMIN')")
