@@ -27,6 +27,9 @@ public class Product {
     private String name;
 
     @NotNull
+    private Long count;
+
+    @NotNull
     private BrandType brand;
 
     @NotNull

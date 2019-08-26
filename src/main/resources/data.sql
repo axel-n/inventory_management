@@ -9,6 +9,6 @@ values (1, 'guest1', 0, 'user1@gmail.com', '$2a$10$LPWXDhi23gwFk.4tvfv8quqBCTBSA
 ---------------------------------------
 -- Product
 ---------------------------------------
-insert into product (id, name, brand, price, cdat)
-values (1, 'product1', 0, 10.0, CURRENT_TIMESTAMP),
-       (2, 'product2', 1, 11.0, CURRENT_TIMESTAMP);
+insert into product (id, name, brand, price, count, cdat)
+values (1, 'product1', 0, 10.0, 1, CURRENT_TIMESTAMP),
+       (2, 'product2', 1, 11.0, 1, CURRENT_TIMESTAMP);

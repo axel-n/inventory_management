@@ -1,6 +1,7 @@
 package com.example.inventory_management.dao;
 
 import com.example.inventory_management.models.product.Product;
+import com.example.inventory_management.models.product.dict.BrandType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,9 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductDao extends JpaRepository<Product, Integer> {
+public interface ProductDao extends JpaRepository<Product, Long> {
 
     Page<Product> findByName(String name, Pageable pageable);
+    Page<Product> findByBrand(BrandType brand, Pageable pageable);
     List<Product> findAll();
 
 //    @Modifying
