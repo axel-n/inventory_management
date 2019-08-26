@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,7 +18,6 @@ public interface ProductDao extends JpaRepository<Product, Long> {
 
     Page<Product> findByNameEquals(String name, Pageable pageable);
     Page<Product> findByBrand(BrandType brand, Pageable pageable);
-    List<Product> findAll();
 
     Optional<Product> findById(Long id);
 

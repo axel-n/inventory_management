@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -143,12 +142,5 @@ public class ProductController {
 
         log.info("user with claims {} want get leftovers products", claims);
         return Mono.just(productDao.findByCountLessThanEqual(countLeftovers, pageable));
-    }
-
-    // for test
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Mono<List<Product>> getAllProducts() {
-        return Mono.just(productDao.findAll());
     }
 }
